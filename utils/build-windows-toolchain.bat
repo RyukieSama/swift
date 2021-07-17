@@ -478,6 +478,7 @@ cmake --build %BuildRoot%\11 --target install || (exit /b)
 cmake ^
   -B %BuildRoot%\12 ^
 
+  -D BUILD_SHARED_LIBS=YES ^
   -D CMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ^
   -D CMAKE_C_COMPILER=%BuildRoot%/1/bin/clang-cl.exe ^
   -D CMAKE_C_FLAGS="/GS- /Oy /Gw /Gy" ^
@@ -497,6 +498,37 @@ cmake ^
   -S %SourceRoot%\indexstore-db || (exit /b)
 cmake --build %BuildRoot%\12 || (exit /b)
 cmake --build %BuildRoot%\12 --target install || (exit /b)
+
+:: Build SourceKit-LSP
+cmake ^
+  -B %BuildRoot%\13 ^
+
+  -D BUILD_SHARED_LIBS=YES ^
+  -D CMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ^
+  -D CMAKE_C_COMPILER=%BuildRoot%/1/bin/clang-cl.exe ^
+  -D CMAKE_C_FLAGS="/GS- /Oy /Gw /Gy" ^
+  -D CMAKE_CXX_COMPILER=%BuildRoot%/1/bin/clang-cl.exe ^
+  -D CMAKE_CXX_FLAGS="/GS- /Oy /Gw /Gy -Xclang -fno-split-cold-code" ^
+  -D CMAKE_MT=mt ^
+  -D CMAKE_Swift_COMPILER=%BuildRoot%/1/bin/swiftc.exe ^
+  -D CMAKE_EXE_LINKER_FLAGS="/INCREMENTAL:NO" ^
+  -D CMAKE_SHARED_LINKER_FLAGS="/INCREMENTAL:NO" ^
+
+  -D CMAKE_INSTALL_PREFIX=%BuildRoot%\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk\usr ^
+
+  -D dispatch_DIR=%BuildRoot%\3\cmake\modules ^
+  -D Foundation_DIR=%BuildRoot%\4\cmake\modules ^
+  -D TSC_DIR=%BuildRoot%\6\cmake\modules ^
+  -D LLBuild_DIR=%BuildRoot%\7\cmake\modules ^
+  -D ArgumentParser_DIR=%BuildRoot%\8\cmake\modules ^
+  -D Yams_DIR=%BuildRoot%\9\cmake\modules ^
+  -D SwiftPM_DIR=%BuildRoot%\11\cmake\modules ^
+  -D IndexStoreDB_DIR=%BuildRoot%\12\cmake\modules ^
+
+  -G Ninja ^
+  -S %SourceRoot%\sourcekit-lsp || (exit /b)
+cmake --build %BuildRoot%\13 || (exit /b)
+cmake --build %BuildRoot%\13 --target install || (exit /b)
 
 :: Clean up the module cache
 rd /s /q %LocalAppData%\clang\ModuleCache
