@@ -470,7 +470,7 @@ cmake ^
   -D SwiftDriver_DIR=%BuildRoot%\10\cmake\modules ^
 
   -G Ninja ^
-  -S %SourceRoot%\swift-driver || (exit /b)
+  -S %SourceRoot%\swift-package-manager || (exit /b)
 cmake --build %BuildRoot%\11 || (exit /b)
 cmake --build %BuildRoot%\11 --target install || (exit /b)
 
